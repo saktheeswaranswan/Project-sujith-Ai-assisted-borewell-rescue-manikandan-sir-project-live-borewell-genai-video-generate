@@ -1,0 +1,1690 @@
+BEST EDPLANATION CORRECT CODE EDXPLAIN
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the transparent cut section
+  drawExtrudedCylinderWithCut();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawExtrudedCylinderWithCut() {
+  push();
+  noFill();  // Ensure no fill color is used for the full cylinder (to make it transparent)
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  
+  rotateX(HALF_PI); // Rotate to show the cross-section properly
+
+  // Draw the outer ring of the cylinder (extruded section with transparency except for the slice)
+  for (let angle = radians(-sliceAngle / 2); angle <= radians(sliceAngle / 2); angle += 0.1) {
+    let x = cylinderRadius * cos(angle);
+    let y = cylinderRadius * sin(angle);
+    line(x, y, -cylinderHeight / 2, x, y, cylinderHeight / 2); // Create the vertical lines along the circumference
+  }
+
+  // Draw the top and bottom surfaces of the cylinder, but keep the rest of the cylinder transparent
+  fill(0, 255, 0, 50);  // Semi-transparent green for the slice area
+  noStroke();
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2)); // Show the slice angle
+
+  // Draw the center line for reference (optional)
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the transparent cut section
+  drawExtrudedCylinderWithCut();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawExtrudedCylinderWithCut() {
+  push();
+  noFill();  // Ensure no fill color is used for the full cylinder (to make it transparent)
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  
+  rotateX(HALF_PI); // Rotate to show the cross-section properly
+
+  // Draw the outer ring of the cylinder (extruded section with transparency except for the slice)
+  for (let angle = radians(-sliceAngle / 2); angle <= radians(sliceAngle / 2); angle += 0.1) {
+    let x = cylinderRadius * cos(angle);
+    let y = cylinderRadius * sin(angle);
+    line(x, y, -cylinderHeight / 2, x, y, cylinderHeight / 2); // Create the vertical lines along the circumference
+  }
+
+  // Draw the top and bottom surfaces of the cylinder, but keep the rest of the cylinder transparent
+  fill(0, 255, 0, 50);  // Semi-transparent green for the slice area
+  noStroke();
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2)); // Show the slice angle
+
+  // Draw the center line for reference (optional)
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+let draggingPoint = false;
+let pointX, pointY; // Position of the draggable red point
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  pointX = 0;
+  pointY = -150; // Initial position of the draggable red point (center of the cylinder)
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the position of the draggable red point
+  sliceAngle = map(pointX, -cylinderRadius, cylinderRadius, 0, 360);
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the transparent cylinder
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  cylinder(cylinderRadius, cylinderHeight);
+  pop();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 255, 0);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman as seen from the top (just a circle for the head)
+  fill(255, 0, 0);  // Red color for head
+  noStroke();
+  ellipse(0, 0, 20, 20); // Head
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function mousePressed() {
+  // Check if the mouse is over the red point
+  let d = dist(mouseX - width / 2, mouseY - height / 2, pointX, pointY);
+  if (d < 10) {
+    draggingPoint = true;
+  }
+}
+
+function mouseReleased() {
+  draggingPoint = false;
+}
+
+function mouseDragged() {
+  // If we're dragging the red point, update its position
+  if (draggingPoint) {
+    pointX = mouseX - width / 2; // Convert mouse position to the canvas center
+    pointY = mouseY - height / 2;
+    
+    // Limit the point's X position to stay within the cylinder's radius
+    pointX = constrain(pointX, -cylinderRadius, cylinderRadius);
+  }
+  
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+let draggingPoint = false;
+let pointX, pointY; // Position of the draggable red point
+
+let sliceAngleInput; // Text input field for slice angle
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  
+  pointX = 0;
+  pointY = -150; // Initial position of the draggable red point (center of the cylinder)
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the transparent cylinder
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  cylinder(cylinderRadius, cylinderHeight);
+  pop();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 255, 0);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman as seen from the top (just a circle for the head)
+  fill(255, 0, 0);  // Red color for head
+  noStroke();
+  ellipse(0, 0, 20, 20); // Head
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+best
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+let draggingPoint = false;
+let pointX, pointY; // Position of the draggable red point
+
+let sliceAngleInput; // Text input field for slice angle control
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  
+  pointX = 0;
+  pointY = -150; // Initial position of the draggable red point (center of the cylinder)
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the transparent cylinder
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  cylinder(cylinderRadius, cylinderHeight);
+  pop();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle with the blue boundary
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice with a blue boundary
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 0, 255); // Blue boundary for the slice
+  strokeWeight(2);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman inside the slice (only within the slice area)
+  drawStickmanInsideSlice(sliceAngle);
+
+  pop();
+}
+
+function drawStickmanInsideSlice(sliceAngle) {
+  // Draw only the section of the stickman visible inside the slice angle
+  push();
+  rotateZ(radians(sliceAngle / 2)); // Rotate the stickman to the slice section
+
+  // Draw the head (a simple circle)
+  fill(255, 0, 0); // Red color for head
+  noStroke();
+  ellipse(0, -cylinderHeight / 4, 20, 20); // Head size 20
+
+  // Draw the body (a line)
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+
+  // Draw the arms (lines)
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+
+  // Draw the legs (lines)
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+let pointX, pointY; // Position of the draggable red point
+
+let sliceAngleInput; // Text input field for slice angle control
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+  
+  pointX = 0;
+  pointY = -150; // Initial position of the draggable red point (center of the cylinder)
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the transparent cylinder
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  cylinder(cylinderRadius, cylinderHeight);
+  pop();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle with the blue boundary
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice with a blue boundary
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 0, 255); // Blue boundary for the slice
+  strokeWeight(2);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman inside the slice (only within the slice area)
+  drawStickmanInsideSlice(sliceAngle);
+
+  pop();
+}
+
+function drawStickmanInsideSlice(sliceAngle) {
+  // Draw only the section of the stickman visible inside the slice angle
+  push();
+  rotateZ(radians(sliceAngle / 2)); // Rotate the stickman to the slice section
+
+  // Draw the head (a simple circle)
+  fill(255, 0, 0); // Red color for head
+  noStroke();
+  ellipse(0, -cylinderHeight / 4, 20, 20); // Head size 20
+
+  // Draw the body (a line)
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+
+  // Draw the arms (lines)
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+
+  // Draw the legs (lines)
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+
+
+
+
+CORRECT CODE
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the "cut" section visible
+  drawCylinderWithCutSection();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle with the blue boundary
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawCylinderWithCutSection() {
+  // Draw the transparent cylinder with the cut section
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  rotateX(HALF_PI); // Rotate to show vertical cut
+  // To "cut" the cylinder, we need to create a sliced effect by drawing half of it
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2));
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice with a blue boundary
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 0, 255); // Blue boundary for the slice
+  strokeWeight(2);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman inside the slice (only within the slice area)
+  drawStickmanInsideSlice(sliceAngle);
+
+  pop();
+}
+
+function drawStickmanInsideSlice(sliceAngle) {
+  // Draw only the section of the stickman visible inside the slice angle
+  push();
+  rotateZ(radians(sliceAngle / 2)); // Rotate the stickman to the slice section
+
+  // Draw the head (a simple circle)
+  fill(255, 0, 0); // Red color for head
+  noStroke();
+  ellipse(0, -cylinderHeight / 4, 20, 20); // Head size 20
+
+  // Draw the body (a line)
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+
+  // Draw the arms (lines)
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+
+  // Draw the legs (lines)
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the "cut" section visible
+  drawCylinderWithCutSection();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the cross-section (top view) showing slice angle with the blue boundary
+  drawCrossSection(sliceAngle);
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawCylinderWithCutSection() {
+  // Draw the transparent cylinder with the cut section
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  rotateX(HALF_PI); // Rotate to show vertical cut
+
+  // Draw the "cut" section (partial arc of the cylinder)
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2));
+
+  // Draw the remaining "covered" section (the rest of the cylinder's sides)
+  beginShape();
+  for (let i = radians(-sliceAngle / 2); i <= radians(sliceAngle / 2); i += 0.1) {
+    let x = cylinderRadius * cos(i);
+    let y = cylinderRadius * sin(i);
+    vertex(x, y);
+  }
+  endShape(CLOSE);
+  
+  // Draw the center line for reference
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawCrossSection(sliceAngle) {
+  // Show the top-down view of the cylinder and stickman in 2D
+  push();
+  translate(0, -150, -200);  // Move above the cylinder
+  rotateX(HALF_PI);  // Rotate the view to look down
+
+  // Draw the transparent cylinder slice with a blue boundary
+  fill(0, 255, 0, 50);  // Semi-transparent green for the cross section
+  stroke(0, 0, 255); // Blue boundary for the slice
+  strokeWeight(2);
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, 0, radians(sliceAngle)); // Angular slice of the cylinder
+
+  // Draw the stickman inside the slice (only within the slice area)
+  drawStickmanInsideSlice(sliceAngle);
+
+  pop();
+}
+
+function drawStickmanInsideSlice(sliceAngle) {
+  // Draw only the section of the stickman visible inside the slice angle
+  push();
+  rotateZ(radians(sliceAngle / 2)); // Rotate the stickman to the slice section
+
+  // Draw the head (a simple circle)
+  fill(255, 0, 0); // Red color for head
+  noStroke();
+  ellipse(0, -cylinderHeight / 4, 20, 20); // Head size 20
+
+  // Draw the body (a line)
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+
+  // Draw the arms (lines)
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+
+  // Draw the legs (lines)
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+CUT SECTION
+
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the "cut" section visible
+  drawCylinderWithAnnularCut();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawCylinderWithAnnularCut() {
+  push();
+  noFill();
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+
+  // Draw the full cylinder, but mask out the non-visible portion
+  rotateX(HALF_PI); // Rotate to show the cross-section properly
+
+  // Draw the full cylinder in an annular section
+  beginShape();
+  for (let angle = radians(-sliceAngle / 2); angle <= radians(sliceAngle / 2); angle += 0.1) {
+    let x = cylinderRadius * cos(angle);
+    let y = cylinderRadius * sin(angle);
+    vertex(x, y);
+  }
+  endShape(CLOSE);
+
+  // Cover the invisible part of the cylinder using a simple arc for the visible slice
+  fill(0, 255, 0, 50);  // Semi-transparent green for the slice area
+  noStroke();
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2));
+
+  // Draw the center line for reference
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CORRECT CODE OF ALL
+
+
+
+
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the transparent cut section
+  drawExtrudedCylinderWithCut();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawExtrudedCylinderWithCut() {
+  push();
+  noFill();  // Ensure no fill color is used for the full cylinder (to make it transparent)
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  
+  rotateX(HALF_PI); // Rotate to show the cross-section properly
+
+  // Draw the outer ring of the cylinder (extruded section with transparency except for the slice)
+  for (let angle = radians(-sliceAngle / 2); angle <= radians(sliceAngle / 2); angle += 0.1) {
+    let x = cylinderRadius * cos(angle);
+    let y = cylinderRadius * sin(angle);
+    line(x, y, -cylinderHeight / 2, x, y, cylinderHeight / 2); // Create the vertical lines along the circumference
+  }
+
+  // Draw the top and bottom surfaces of the cylinder, but keep the rest of the cylinder transparent
+  fill(0, 255, 0, 50);  // Semi-transparent green for the slice area
+  noStroke();
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2)); // Show the slice angle
+
+  // Draw the center line for reference (optional)
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}

@@ -1,0 +1,147 @@
+let angleX = 0;
+let angleY = 0;
+let stickmanAngle = 0;
+let cylinderRadius = 100;
+let cylinderHeight = 300;
+let sliceAngle = 180; // Initial slice angle (half of the cylinder)
+let zPos = 0;
+let lastMouseX, lastMouseY;
+
+function setup() {
+  createCanvas(600, 600, WEBGL);
+
+  // Initial position of the red point (center of the cylinder)
+  pointX = 0;
+  pointY = -150;
+
+  // Create an HTML text input for slice angle control
+  sliceAngleInput = createInput(sliceAngle.toString()); // Initial slice angle in the input box
+  sliceAngleInput.position(20, height + 20);
+  sliceAngleInput.size(100, 20);
+  sliceAngleInput.input(updateSliceAngle); // Call the update function when the input changes
+}
+
+function draw() {
+  background(200);
+
+  // Update slice angle based on the user input (the input text box)
+  sliceAngle = float(sliceAngleInput.value());
+
+  // Set the perspective view for the cylinder and stickman
+  rotateX(angleX);
+  rotateY(angleY);
+
+  // Draw the cylinder with the transparent cut section
+  drawExtrudedCylinderWithCut();
+
+  // Draw the stickman inside the cylinder at the given Z position
+  push();
+  translate(0, zPos, 0);
+  drawStickman();
+  pop();
+
+  // Draw the red draggable point
+  drawRedPoint();
+}
+
+function drawExtrudedCylinderWithCut() {
+  push();
+  noFill();  // Ensure no fill color is used for the full cylinder (to make it transparent)
+  stroke(0, 255, 0);  // Cylinder outline in green
+  strokeWeight(2);
+  
+  rotateX(HALF_PI); // Rotate to show the cross-section properly
+
+  // Draw the outer ring of the cylinder (extruded section with transparency except for the slice)
+  for (let angle = radians(-sliceAngle / 2); angle <= radians(sliceAngle / 2); angle += 0.1) {
+    let x = cylinderRadius * cos(angle);
+    let y = cylinderRadius * sin(angle);
+    line(x, y, -cylinderHeight / 2, x, y, cylinderHeight / 2); // Create the vertical lines along the circumference
+  }
+
+  // Draw the top and bottom surfaces of the cylinder, but keep the rest of the cylinder transparent
+  fill(0, 255, 0, 50);  // Semi-transparent green for the slice area
+  noStroke();
+  arc(0, 0, cylinderRadius * 2, cylinderRadius * 2, radians(-sliceAngle / 2), radians(sliceAngle / 2)); // Show the slice angle
+
+  // Draw the center line for reference (optional)
+  line(0, -cylinderHeight / 2, 0, 0, cylinderHeight / 2, 0); // Create the center line from top to bottom
+
+  pop();
+}
+
+function drawStickman() {
+  push();
+  // Rotate the stickman slightly to show a dynamic pose
+  rotateY(stickmanAngle);
+
+  // Draw the head (a simple circle)
+  push();
+  translate(0, -cylinderHeight / 4, 0);
+  stroke(0);
+  strokeWeight(2);
+  fill(255, 0, 0);  // Red color for head
+  ellipse(0, 0, 20, 20); // Head size 20
+  pop();
+
+  // Draw the body (a line)
+  push();
+  translate(0, 0, 0);
+  stroke(0);
+  line(0, 0, 0, 0, cylinderHeight / 2, 0); // Body length is half the cylinder height
+  pop();
+
+  // Draw the arms (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, 0, 0, -50, 50, 0);  // Left arm
+  line(0, 0, 0, 50, 50, 0);   // Right arm
+  pop();
+
+  // Draw the legs (lines)
+  push();
+  translate(0, 0, 0);
+  line(0, cylinderHeight / 2, 0, -50, cylinderHeight, 0);  // Left leg
+  line(0, cylinderHeight / 2, 0, 50, cylinderHeight, 0);   // Right leg
+  pop();
+
+  pop();
+}
+
+function drawRedPoint() {
+  // Draw the red point at the current position, representing the draggable handle
+  push();
+  fill(255, 0, 0); // Red color for the point
+  noStroke();
+  ellipse(pointX, pointY, 10, 10); // Draw the point
+  pop();
+}
+
+function updateSliceAngle() {
+  // This function is called when the text input for slice angle is updated
+  let newSliceAngle = float(sliceAngleInput.value());
+  newSliceAngle = constrain(newSliceAngle, 0, 360); // Constrain the value to be between 0 and 360
+  sliceAngle = newSliceAngle; // Update the slice angle globally
+}
+
+function mousePressed() {
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function mouseDragged() {
+  // For rotating the scene, update angles based on mouse drag
+  angleY += (mouseX - lastMouseX) * 0.01; // Update rotation angle in the Y direction
+  angleX -= (mouseY - lastMouseY) * 0.01; // Update rotation angle in the X direction
+  
+  lastMouseX = mouseX;
+  lastMouseY = mouseY;
+}
+
+function keyPressed() {
+  if (keyCode === UP_ARROW) {
+    zPos -= 10; // Move stickman up inside the cylinder
+  } else if (keyCode === DOWN_ARROW) {
+    zPos += 10; // Move stickman down inside the cylinder
+  }
+}
